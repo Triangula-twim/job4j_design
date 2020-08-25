@@ -30,14 +30,8 @@ public class SimpleArray<T> implements Iterable<T> {
 
     public void remove(int index) {
         Objects.checkIndex(index, countFullCells);
-        if (index == size - 1) {
-            objects[index] = null;
-        }
-        while (index + 1 < size && objects[index + 1] != null) {
-            objects[index] = objects[index + 1];
-            objects[index + 1] = null;
-            index++;
-        }
+        System.arraycopy(objects, index + 1, objects, index, size - 1 - index);
+        objects[size - 1] = null;
         countFullCells--;
     }
 
