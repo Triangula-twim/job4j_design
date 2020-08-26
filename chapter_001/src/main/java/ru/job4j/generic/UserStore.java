@@ -1,6 +1,6 @@
 package ru.job4j.generic;
 
-public class UserStore<User extends Base> implements Store<User> {
+public class UserStore implements Store<User> {
 
     private final Store<User> store = new MemStore<>();
 
