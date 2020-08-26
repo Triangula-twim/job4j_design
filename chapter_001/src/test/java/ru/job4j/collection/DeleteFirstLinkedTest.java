@@ -1,5 +1,6 @@
 package ru.job4j.collection;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -41,5 +42,26 @@ public class DeleteFirstLinkedTest {
         linked.add(2);
         int rsl = linked.deleteFirst();
         assertThat(rsl, is(1));
+    }
+
+    @Test
+    public void whenMultiDeleteLast() {
+        ForwardLinked<Integer> linked = new ForwardLinked<>();
+        linked.add(1);
+        linked.add(2);
+        linked.add(3);
+        linked.deleteLast();
+        Iterator<Integer> it = linked.iterator();
+        it.next();
+        assertThat(it.next(), is(2));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenMultiDeleteLastOne() {
+        ForwardLinked<Integer> linked = new ForwardLinked<>();
+        linked.add(1);
+        linked.deleteLast();
+        Iterator<Integer> it = linked.iterator();
+        it.next();
     }
 }
