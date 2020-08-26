@@ -33,4 +33,13 @@ public class DeleteFirstLinkedTest {
         Iterator<Integer> it = linked.iterator();
         assertThat(it.next(), is(2));
     }
+
+    @Test
+    public void whenMultiDeleteT() {
+        ForwardLinked<Integer> linked = new ForwardLinked<>();
+        linked.add(1);
+        linked.add(2);
+        int rsl = linked.deleteFirst();
+        assertThat(rsl, is(1));
+    }
 }
