@@ -1,18 +1,22 @@
 package ru.job4j.collection;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class SimpleSet<E> implements Iterable<E> {
 
     private SimpleArray<E> array = new SimpleArray<E>();
-    private Map<E, Object> map = new LinkedHashMap<>();
 
     public void add(E e) {
-        if (!map.containsKey(e)) {
+        boolean sameCell = false;
+        for (E el:
+             array) {
+            if (el.equals(e)) {
+                sameCell = true;
+                break;
+            }
+        }
+        if (!sameCell) {
             array.add(e);
-            map.put(e, new Object());
         }
     }
 
