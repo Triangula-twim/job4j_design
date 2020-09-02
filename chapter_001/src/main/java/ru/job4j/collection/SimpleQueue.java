@@ -9,17 +9,27 @@ public class SimpleQueue<T> {
     private int outSize = 0;
 
     public T poll() {
-        for (int i = 0; i < inSize; i++) {
-            out.push(in.pop());
-            outSize++;
+        T rsl = null;
+        if (inSize == 0) {
+            throw new NoSuchElementException();
         }
-        inSize = 0;
-        T rsl = out.pop();
-        outSize--;
-        for (int i = 0; i < outSize; i++) {
-            in.push(out.pop());
+        while (true) {
+            if (inSize > 1) {
+                out.push(in.pop());
+                outSize++;
+                inSize--;
+                continue;
+            } else if (inSize == 1) {
+                rsl = in.pop();
+                inSize--;
+            }
+            if (outSize > 0) {
+                in.push(out.pop());
+                outSize--;
+                continue;
+            }
+            return rsl;
         }
-        return rsl;
     }
 
     public void push(T value) {
