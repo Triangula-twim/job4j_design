@@ -25,6 +25,14 @@ public class BaseHashMapTest {
     }
 
     @Test
+    public void insertTwo() {
+        BaseHashMap map = new BaseHashMap();
+        map.insert(1, "one");
+        map.insert(1, "two");
+        Assert.assertEquals(map.get(1), "two");
+    }
+
+    @Test
     public void deleteOne() {
         BaseHashMap map = new BaseHashMap();
         map.insert(1, "one");

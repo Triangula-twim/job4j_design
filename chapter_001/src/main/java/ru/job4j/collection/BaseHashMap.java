@@ -26,6 +26,9 @@ public class BaseHashMap<K, V> implements Iterable<V> {
             size++;
             return true;
         }
+        if (key.equals(array[index].getKey())) {
+            array[index].setValue(value);
+        }
         return false;
     }
 
@@ -46,7 +49,10 @@ public class BaseHashMap<K, V> implements Iterable<V> {
         if (array[index] == null) {
             return null;
         }
-        return array[index].getValue();
+        if (key.equals(array[index].getKey())) {
+            return array[index].getValue();
+        }
+        return null;
     }
 
     public boolean delete(K key) {
@@ -54,9 +60,12 @@ public class BaseHashMap<K, V> implements Iterable<V> {
         if (array[index] == null) {
             return false;
         }
-        array[index] = null;
-        size--;
-        return true;
+        if (key.equals(array[index].getKey())) {
+            array[index] = null;
+            size--;
+            return true;
+        }
+        return false;
     }
 
     private int hash(K key) {
