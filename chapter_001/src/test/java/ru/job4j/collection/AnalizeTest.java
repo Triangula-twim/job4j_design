@@ -13,8 +13,8 @@ public class AnalizeTest {
     public void diffOneDeletedOneAdded() {
         Analize analize = new Analize();
         Info expected = new Info();
-        expected.deleted = 1;
-        expected.added = 1;
+        expected.setDeleted(1);
+        expected.setAdded(1);
         List<User> previous = List.of(new Analize.User(1, "Slava"),
                 new Analize.User(2, "Ira"),
                 new Analize.User(4, "Gleb"));
@@ -28,9 +28,9 @@ public class AnalizeTest {
     public void diffOneDeletedOneChangedTwoAdded() {
         Analize analize = new Analize();
         Info expected = new Info();
-        expected.deleted = 1;
-        expected.changed = 1;
-        expected.added = 2;
+        expected.setDeleted(1);
+        expected.setChanged(1);
+        expected.setAdded(2);
         List<User> previous = List.of(new Analize.User(1, "Slava"),
                 new Analize.User(4, "Gleb"));
         List<User> current = List.of(new Analize.User(1, "Sliva"),

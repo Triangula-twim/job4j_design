@@ -1,36 +1,29 @@
 package ru.job4j.collection;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Analize {
 
     public Info diff(List<User> previous, List<User> current) {
         Info rsl = new Info();
-        for (User user:
-             current) {
-            int index = findById(user.id, previous);
-            if (index == -1) {
-                rsl.added += 1;
-                continue;
+        Map<Integer, String> mapCurrent = current.stream()
+                .collect(Collectors.toMap(key -> key.id, value -> value.name));
+        for (User u: previous) {
+            if (mapCurrent.containsKey(u.id)) {
+                if (!mapCurrent.get(u.id).equals(u.name)) {
+                    rsl.setChanged(rsl.getChanged() + 1);
+                }
+                mapCurrent.remove(u.id);
+            } else {
+                rsl.setDeleted(rsl.getDeleted() + 1);
             }
-            rsl.changed += previous.get(index).name.equals(user.name) ? 0 : 1;
         }
-        for (User user:
-             previous) {
-            int index = findById(user.id, current);
-            rsl.deleted += index == -1 ? 1 : 0;
-        }
+        rsl.setAdded(mapCurrent.size());
         return rsl;
-    }
-
-    private int findById(int id, List<User> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).id == id) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     public static class User {
@@ -44,23 +37,47 @@ public class Analize {
     }
 
     public static class Info {
-        int added;
-        int changed;
-        int deleted;
+        private int added;
+        private int changed;
+        private int deleted;
+
+        public void setAdded(int added) {
+            this.added = added;
+        }
+
+        public void setChanged(int changed) {
+            this.changed = changed;
+        }
+
+        public void setDeleted(int deleted) {
+            this.deleted = deleted;
+        }
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Info info = (Info) o;
-            return added == info.added &&
-                    changed == info.changed &&
-                    deleted == info.deleted;
+            return added == info.added
+                    && changed == info.changed
+                    && deleted == info.deleted;
         }
 
         @Override
         public int hashCode() {
             return Objects.hash(added, changed, deleted);
+        }
+
+        public int getDeleted() {
+            return deleted;
+        }
+
+        public int getChanged() {
+            return changed;
         }
     }
 }
