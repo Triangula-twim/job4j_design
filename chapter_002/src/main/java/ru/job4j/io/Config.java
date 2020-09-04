@@ -18,7 +18,9 @@ public class Config {
         try (BufferedReader reader = new BufferedReader(new FileReader(this.path))) {
             reader.lines()
                     .filter(s -> !s.equals(""))
+                    .filter(s -> s.contains("="))
                     .map(s -> s.split("="))
+                    .filter(strings -> strings.length == 2)
                     .forEach(el -> values.put(el[0], el[1]));
         } catch (Exception e) {
             e.printStackTrace();
