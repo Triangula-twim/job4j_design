@@ -5,32 +5,32 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Search {
     public static void main(String[] args) throws IOException {
-        if (args.length == 0) {
+        if (args.length == 0 || args.length == 1) {
             throw new IllegalArgumentException(
-                    "Root folder is null. Usage java -jar dir.jar ROOT_FOLDER.");
+                    "Some parameters are not defined");
         }
         Path start = Paths.get(args[0]);
         search(start, args[1]).forEach(System.out::println);
     }
 
     public static List<Path> search(Path root, String ext) throws IOException {
-        SimpleFileVisitor visitor = new SimpleFileVisitor();
-        visitor.setExt(ext);
-        Files.walkFileTree(root, visitor);
-        return visitor.getPath();
+        SearchFiles searcher = new SearchFiles(p -> p.toFile().getName().endsWith(ext));
+        Files.walkFileTree(root, searcher);
+        return searcher.getPath();
     }
 
-    public static class SimpleFileVisitor implements FileVisitor<Path> {
+    public static class SearchFiles implements FileVisitor<Path> {
 
         private List<Path> path = new ArrayList<>();
 
-        private String ext;
+        private Predicate<Path> predicate;
 
-        public void setExt(String ext) {
-            this.ext = ext;
+        public SearchFiles(Predicate<Path> predicate) {
+            this.predicate = predicate;
         }
 
         public List<Path> getPath() {
@@ -46,7 +46,7 @@ public class Search {
         @Override
         public FileVisitResult visitFile(
                 Path file, BasicFileAttributes attrs) throws IOException {
-            if (file.toString().endsWith(ext)) {
+            if (predicate.test(file)) {
                 this.path.add(file.toAbsolutePath());
             }
             return FileVisitResult.CONTINUE;
