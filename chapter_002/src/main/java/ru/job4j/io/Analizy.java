@@ -1,6 +1,5 @@
 package ru.job4j.io;
 
-import javax.swing.plaf.IconUIResource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,42 +7,36 @@ import java.util.List;
 public class Analizy {
 
     public void unavailable(String source, String target) {
-        List<String[]> list = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
-            reader.lines()
-                    .filter(s -> !s.equals(""))
-                    .map(s -> s.split(" "))
-                    .forEach(list::add);
+        List<String> list = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(source))) {
+            String[] cell = new String[2];
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                String[] rsl = currentLine.split(" ");
+                if (cell[0] == null) {
+                    if (rsl[0].equals("500") || rsl[0].equals("400")) {
+                        cell[0] = rsl[1];
+                    }
+                } else if (cell[1] == null) {
+                    if (rsl[0].equals("200") || rsl[0].equals("300")) {
+                        cell[1] = rsl[1];
+                        list.add(cell[0] + ";" + cell[1] + "\n");
+                        cell = new String[2];
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         try (PrintWriter out = new PrintWriter(
                 new BufferedOutputStream(
                         new FileOutputStream(target)))) {
-            out.write(notWork(list));
+            for (String s: list) {
+                out.write(s);
+            }
         } catch (Exception e) {
                 e.printStackTrace();
         }
-    }
-
-    private String notWork(List<String[]> list) {
-        StringBuilder rsl = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i)[0].equals("500") || list.get(i)[0].equals("400")) {
-                rsl.append(list.get(i)[1]).append(";");
-                i++;
-                for (int j = i; j < list.size(); j++) {
-                    if (!list.get(j)[0].equals("500") && !list.get(j)[0].equals("400")) {
-                        rsl.append(list.get(j)[1]);
-                        break;
-                    } else {
-                        i++;
-                    }
-                }
-                rsl.append("\n");
-            }
-        }
-        return rsl.toString();
     }
 
     public static void main(String[] args) {
