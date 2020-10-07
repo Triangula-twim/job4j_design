@@ -38,13 +38,9 @@ public class SearchSameFiles {
                 Path file, BasicFileAttributes attrs) throws IOException {
             FileAttr fileAttr = new FileAttr(file.getFileName().toString(), attrs.size());
             if (forCheck.containsKey(fileAttr)) {
-                if (rsl.containsKey(fileAttr)) {
-                    rsl.put(fileAttr, rsl.get(fileAttr)
-                            + file.toAbsolutePath().toString() + "\n");
-                } else {
-                    rsl.put(fileAttr, forCheck.get(fileAttr)
-                            + file.toAbsolutePath().toString() + "\n");
-                }
+                forCheck.put(fileAttr, forCheck.get(fileAttr)
+                        + file.toAbsolutePath().toString() + "\n");
+                rsl.put(fileAttr, forCheck.get(fileAttr));
             } else {
                 forCheck.put(fileAttr, file.toAbsolutePath().toString() + "\n");
             }
