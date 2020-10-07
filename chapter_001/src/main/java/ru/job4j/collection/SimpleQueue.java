@@ -2,24 +2,23 @@ package ru.job4j.collection;
 
 public class SimpleQueue<T> {
     private final SimpleStack<T> in = new SimpleStack<>();
-    private int inSize = 0;
     private final SimpleStack<T> out = new SimpleStack<>();
-    private int outSize = 0;
 
     public T poll() {
-        T rsl = null;
-        if (outSize == 0) {
+        int inSize = in.getSizeField();
+        if (out.isEmpty()) {
             for (int i = 0; i < inSize; i++) {
                 out.push(in.pop());
+                in.setSizeField(in.getSizeField() - 1);
+                out.setSizeField(out.getSizeField() + 1);
             }
-            rsl = out.pop();
-            inSize--;
         }
-        return rsl;
+        out.setSizeField(out.getSizeField() - 1);
+        return out.pop();
     }
 
     public void push(T value) {
         in.push(value);
-        inSize++;
+        in.setSizeField(in.getSizeField() + 1);
     }
 }
